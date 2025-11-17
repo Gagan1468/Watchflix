@@ -310,3 +310,48 @@ a {
 
 /* ensure posters scale cleanly when hovered (already in CSS but repeat for safety) */
 .card img{display:block;width:100%;height:100%;object-fit:cover}
+
+.nav {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+.nav-link {
+  color: #e5e5e5;
+  font-size: 15px;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 4px;
+  transition: color .3s;
+}
+
+.nav-link:hover {
+  color: #fff;
+}
+
+/* RED underline on hover */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0%;
+  height: 2px;
+  background: #e50914;
+  transition: width .3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* ACTIVE page underline ALWAYS visible */
+.nav-link.active {
+  color: #fff;
+}
+
+.nav-link.active::after {
+  width: 100%;
+}
+
