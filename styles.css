@@ -1,0 +1,272 @@
+/* ------------------------------
+   GLOBAL
+------------------------------ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #000;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ------------------------------
+   HEADER / NAVBAR
+------------------------------ */
+
+.site-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 68px;
+  padding: 0 60px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 200;
+}
+
+.brand {
+  color: #e50914;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.nav {
+  margin-left: 30px;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-link {
+  font-size: 15px;
+  opacity: 0.9;
+  transition: 0.2s;
+}
+
+.nav-link:hover {
+  opacity: 1;
+}
+
+/* right side */
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.search {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  outline: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  color: white;
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.avatar {
+  background: #e50914;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+/* ------------------------------
+   HERO SECTION
+------------------------------ */
+
+.hero {
+  width: 100%;
+  height: 85vh;
+  position: relative;
+  margin-top: 68px;
+}
+
+.hero-backdrop {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center center;
+  filter: brightness(0.5);
+  z-index: -1;
+}
+
+.hero-gradient {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, #000, transparent);
+}
+
+.hero-inner {
+  padding-top: 150px;
+  padding-left: 60px;
+  max-width: 700px;
+}
+
+.hero-info h1 {
+  font-size: 48px;
+  font-weight: 900;
+  margin-bottom: 15px;
+}
+
+.hero-info p {
+  font-size: 18px;
+  opacity: 0.85;
+  margin-bottom: 25px;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.primary {
+  background: white;
+  color: black;
+}
+
+.ghost {
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+
+/* ------------------------------
+   MOVIE ROWS
+------------------------------ */
+
+.rows {
+  margin-top: 30px;
+  padding: 0 60px;
+}
+
+.row {
+  margin-bottom: 40px;
+}
+
+.row-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.row-posters {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+.row-posters::-webkit-scrollbar {
+  height: 0;
+}
+
+.poster {
+  width: 180px;
+  height: 260px;
+  border-radius: 4px;
+  object-fit: cover;
+  transition: 0.3s;
+}
+
+.poster:hover {
+  transform: scale(1.1);
+}
+
+/* ------------------------------
+   MODAL
+------------------------------ */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  background: rgba(0,0,0,0.7);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.modal-card {
+  width: 750px;
+  background: #111;
+  border-radius: 8px;
+  padding: 20px;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding-top: 20px;
+}
+
+/* ------------------------------
+   RESPONSIVE
+------------------------------ */
+
+@media (max-width: 768px) {
+  .site-header {
+    padding: 0 20px;
+  }
+
+  .hero-inner {
+    padding-left: 20px;
+    padding-top: 120px;
+  }
+
+  .rows {
+    padding: 0 20px;
+  }
+
+  .poster {
+    width: 140px;
+    height: 210px;
+  }
+}
