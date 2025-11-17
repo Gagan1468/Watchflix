@@ -3,52 +3,57 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>NovaFlix — Netflix UI Clone (Frontend)</title>
+  <title>NovaFlix — Netflix Clone (TMDB)</title>
   <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
   <header class="site-header">
-    <div class="brand">NovaFlix</div>
-    <nav class="nav">
-      <a href="#" class="nav-link">Home</a>
-      <a href="#" class="nav-link">TV Shows</a>
-      <a href="#" class="nav-link">Movies</a>
-      <a href="#" class="nav-link">My List</a>
-    </nav>
-    <div class="header-actions">
-      <input id="search" class="search" placeholder="Search" />
-      <div class="avatar">JS</div>
+    <div class="left">
+      <div class="brand">NovaFlix</div>
+      <nav class="nav">
+        <a href="#" class="nav-link">Home</a>
+        <a href="#" class="nav-link">TV Shows</a>
+        <a href="#" class="nav-link">Movies</a>
+        <a href="#" class="nav-link">My List</a>
+      </nav>
+    </div>
+
+    <div class="right">
+      <input id="search" class="search" placeholder="Title, actor, genre..." />
+      <button id="theme-toggle" class="icon-btn">⭘</button>
+      <div class="avatar">CS</div>
     </div>
   </header>
 
   <main>
     <section id="hero" class="hero">
-      <div class="hero-left">
-        <h1 id="hero-title">Loading...</h1>
-        <p id="hero-overview"></p>
-        <div class="hero-cta">
-          <button id="play-btn" class="btn play">▶ Play</button>
-          <button id="info-btn" class="btn info">i More Info</button>
+      <div class="hero-inner">
+        <div class="hero-info">
+          <h1 id="hero-title">Loading...</h1>
+          <p id="hero-overview"></p>
+          <div class="hero-ctas">
+            <button id="hero-play" class="btn primary">▶ Play</button>
+            <button id="hero-info" class="btn ghost">i More Info</button>
+          </div>
         </div>
       </div>
-      <div class="hero-right">
-        <img id="hero-img" src="" alt="poster" />
-      </div>
+      <div id="hero-backdrop" class="hero-backdrop"></div>
+      <div class="hero-gradient"></div>
     </section>
 
-    <section id="rows" class="rows">
-      <!-- Rows injected here -->
-    </section>
+    <section id="rows" class="rows"></section>
   </main>
 
-  <!-- Modal -->
-  <div id="modal" class="modal hidden">
-    <div class="modal-content">
+  <!-- modal -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
       <button id="modal-close" class="modal-close">✕</button>
-      <div id="modal-body"></div>
+      <div id="modal-body" class="modal-body"></div>
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js" type="module"></script>
 </body>
 </html>
