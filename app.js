@@ -341,3 +341,39 @@ async function init(){
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+
+// router pages
+const pages = {
+  home: "<h1 class='page-title'>Home</h1>",
+  movies: "<h1 class='page-title'>Movies</h1>",
+  tv: "<h1 class='page-title'>TV Shows</h1>",
+  mylist: "<h1 class='page-title'>My List</h1>"
+};
+
+// load route
+function loadRoute() {
+  let hash = location.hash.replace("#", "") || "home";
+
+  // highlight active navbar link
+  document.querySelectorAll(".nav-link").forEach(a => {
+    a.classList.toggle("active", a.dataset.route === hash);
+  });
+
+  // smooth transition
+  const main = document.querySelector("main");
+  main.classList.add("fade-out");
+
+  setTimeout(() => {
+    main.innerHTML = `
+      <div class="page fade-in">
+        ${pages[hash] || "<h1>404 — Not Found</h1>"}
+      </div>
+    `;
+    main.classList.remove("fade-out");
+  }, 200);
+}
+
+window.addEventListener("hashchange", loadRoute);
+window.addEventListener("load", loadRoute);
+
