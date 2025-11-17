@@ -1,5 +1,6 @@
 // app.js — loads local mock data and renders UI
-const API_MOCK = './mock-data.json'; // change to TMDB endpoint when you have an api_key
+const API_MOCK = 'const API_MOCK = `https://api.themoviedb.org/3/movie/popular?api_key=63c62d92d97c823fcf668b74693bf705&language=en-US&page=1`;
+'; // change to TMDB endpoint when you have an api_key
 
 // image base like TMDB
 const IMG_BASE = 'https://image.tmdb.org/t/p/w500'; // same usage when using TMDB real data
