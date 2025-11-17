@@ -346,3 +346,45 @@ document.addEventListener('DOMContentLoaded', init);
 window.addEventListener("hashchange", loadRoute);
 window.addEventListener("load", loadRoute);
 
+// --------------------
+// SIMPLE HASH ROUTER
+// --------------------
+function setActiveLink() {
+  const hash = location.hash.replace("#", "") || "home";
+  document.querySelectorAll(".nav-link").forEach(link => {
+    link.classList.remove("active");
+    if (link.getAttribute("href") === `#${hash}`) {
+      link.classList.add("active");
+    }
+  });
+
+  // page switch animation
+  document.querySelector("main").classList.add("fade");
+  setTimeout(() => {
+    document.querySelector("main").classList.remove("fade");
+  }, 200);
+
+  loadPage(hash);
+}
+
+function loadPage(page) {
+  const rows = document.getElementById("rows");
+
+  if (page === "home") {
+    rows.innerHTML = `<h1 class="page-title">Home</h1>`;
+  }
+  if (page === "tv") {
+    rows.innerHTML = `<h1 class="page-title">TV Shows</h1>`;
+  }
+  if (page === "movies") {
+    rows.innerHTML = `<h1 class="page-title">Movies</h1>`;
+  }
+  if (page === "mylist") {
+    rows.innerHTML = `<h1 class="page-title">My List</h1>`;
+  }
+}
+
+window.addEventListener("hashchange", setActiveLink);
+setActiveLink();
+
+
