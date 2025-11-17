@@ -387,4 +387,61 @@ function loadPage(page) {
 window.addEventListener("hashchange", setActiveLink);
 setActiveLink();
 
+// --------------------------------------------------
+// NETFLIX STYLE SPA ROUTER + HERO FIX
+// --------------------------------------------------
+
+function showHero(show) {
+  document.getElementById("hero").style.display = show ? "block" : "none";
+}
+
+// Highlight active nav item
+function setActiveLink() {
+  const hash = location.hash.replace("#", "") || "home";
+
+  document.querySelectorAll(".nav-link").forEach(link => {
+    link.classList.remove("active");
+    if (link.getAttribute("href") === `#${hash}`) {
+      link.classList.add("active");
+    }
+  });
+
+  // page fade animation
+  document.querySelector("main").classList.add("fade");
+  setTimeout(() => {
+    document.querySelector("main").classList.remove("fade");
+  }, 200);
+
+  loadPage(hash);
+}
+
+// Page loader
+function loadPage(page) {
+  const rows = document.getElementById("rows");
+
+  if (page === "home") {
+    showHero(true);
+    rows.innerHTML = ``;   // HERO will show the content
+  }
+
+  if (page === "tv") {
+    showHero(false);
+    rows.innerHTML = `<h1 class="page-title">TV Shows</h1>`;
+  }
+
+  if (page === "movies") {
+    showHero(false);
+    rows.innerHTML = `<h1 class="page-title">Movies</h1>`;
+  }
+
+  if (page === "mylist") {
+    showHero(false);
+    rows.innerHTML = `<h1 class="page-title">My List</h1>`;
+  }
+}
+
+window.addEventListener("hashchange", setActiveLink);
+setActiveLink();
+
+
 
