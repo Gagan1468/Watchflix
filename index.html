@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>NovaFlix — Netflix UI Clone (Frontend)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">NovaFlix</div>
+    <nav class="nav">
+      <a href="#" class="nav-link">Home</a>
+      <a href="#" class="nav-link">TV Shows</a>
+      <a href="#" class="nav-link">Movies</a>
+      <a href="#" class="nav-link">My List</a>
+    </nav>
+    <div class="header-actions">
+      <input id="search" class="search" placeholder="Search" />
+      <div class="avatar">JS</div>
+    </div>
+  </header>
+
+  <main>
+    <section id="hero" class="hero">
+      <div class="hero-left">
+        <h1 id="hero-title">Loading...</h1>
+        <p id="hero-overview"></p>
+        <div class="hero-cta">
+          <button id="play-btn" class="btn play">▶ Play</button>
+          <button id="info-btn" class="btn info">i More Info</button>
+        </div>
+      </div>
+      <div class="hero-right">
+        <img id="hero-img" src="" alt="poster" />
+      </div>
+    </section>
+
+    <section id="rows" class="rows">
+      <!-- Rows injected here -->
+    </section>
+  </main>
+
+  <!-- Modal -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <button id="modal-close" class="modal-close">✕</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
