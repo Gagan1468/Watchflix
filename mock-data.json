@@ -1,0 +1,28 @@
+{
+  "rows": [
+    {
+      "title": "Trending Now",
+      "items": [
+        {"id":1,"title":"The Silent Sea","overview":"A tense sci-fi survival.","poster_path":"/8Qw1IL3wQvQKZ3FzZz2k2Y2.jpg","vote_average":7.9},
+        {"id":2,"title":"Quantum Heist","overview":"A daring tech-thriller.","poster_path":"/qHeistPoster.jpg","vote_average":7.2},
+        {"id":3,"title":"Midnight Run","overview":"Edge-of-seat action.","poster_path":"/midnight.jpg","vote_average":8.1}
+      ]
+    },
+    {
+      "title": "New Releases",
+      "items": [
+        {"id":4,"title":"The Last Orbit","overview":"Space drama and survival.", "poster_path":"/orbit.jpg","vote_average":6.9},
+        {"id":5,"title":"Hidden Truth","overview":"A detective unravels secrets.","poster_path":"/hidden.jpg","vote_average":7.5},
+        {"id":6,"title":"Neon City","overview":"Cyberpunk heist movie.","poster_path":"/neon.jpg","vote_average":7.8}
+      ]
+    },
+    {
+      "title": "Popular on NovaFlix",
+      "items": [
+        {"id":7,"title":"Island of Echoes","overview":"Mysterious island story.","poster_path":"/island.jpg","vote_average":6.8},
+        {"id":8,"title":"The Vault", "overview":"Bank robbery thriller.","poster_path":"/vault.jpg","vote_average":7.0},
+        {"id":9,"title":"Echo Protocol", "overview":"Spy-tech drama.","poster_path":"/echo.jpg","vote_average":7.6}
+      ]
+    }
+  ]
+}
