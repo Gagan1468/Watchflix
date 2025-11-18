@@ -1,0 +1,231 @@
+import cv2
+import face_recognition
+import os
+import numpy as np
+from datetime import datetime
+import speech_recognition as sr
+import time
+import tkinter as tk
+from tkinter import ttk
+import threading
+import pyttsx3
+
+KNOWN_FACES_DIR = "known_faces"
+SAVE_DIR = "attendance_txt"
+UNKNOWN_DIR = "unknown_faces"
+RECORDINGS_DIR = "recordings"
+CUTOFF_TIME = datetime.strptime("07:30", "%H:%M").time()
+SLEEP_AFTER = 10
+running = False
+
+os.makedirs(SAVE_DIR, exist_ok=True)
+os.makedirs(UNKNOWN_DIR, exist_ok=True)
+os.makedirs(RECORDINGS_DIR, exist_ok=True)
+
+# ==== Load known faces ====
+known_encodings = []
+known_names = []
+
+for file in os.listdir(KNOWN_FACES_DIR):
+    if file.endswith(('.jpg', '.jpeg', '.png')):
+        img = face_recognition.load_image_file(os.path.join(KNOWN_FACES_DIR, file))
+        if img.dtype != np.uint8:
+            img = (img * 255).astype(np.uint8)
+        if img.shape[2] == 4:
+            img = img[:, :, :3]
+        encode = face_recognition.face_encodings(img)
+        if encode:
+            known_encodings.append(encode[0])
+            known_names.append(os.path.splitext(file)[0])
+
+# ==== GUI ====
+root = tk.Tk()
+root.title("🧠 Smart Attendance Panel")
+root.geometry("500x400")
+root.resizable(False, False)
+
+style = ttk.Style()
+style.configure("TButton", font=("Segoe UI", 12), padding=10)
+style.configure("TLabel", font=("Segoe UI", 11), wraplength=460)
+
+title = ttk.Label(root, text="🎤 Face + Voice Attendance System", font=("Segoe UI", 14, "bold"))
+title.pack(pady=10)
+
+status_label = ttk.Label(root, text="Click Start to begin", foreground="blue")
+status_label.pack(pady=5)
+
+# ==== Attendance Log Area ====
+log_frame = ttk.Frame(root)
+log_frame.pack(pady=5, fill="both", expand=True)
+
+log_text = tk.Text(log_frame, height=8, state="disabled", bg="#f0f0f0", font=("Segoe UI", 10))
+log_text.pack(side="left", fill="both", expand=True)
+
+scrollbar = ttk.Scrollbar(log_frame, orient="vertical", command=log_text.yview)
+scrollbar.pack(side="right", fill="y")
+
+log_text.config(yscrollcommand=scrollbar.set)
+
+# ==== GUI Functions ====
+def update_status(text):
+    def do_update():
+        if status_label.winfo_exists():
+            status_label.config(text=text)
+    try:
+        if root.winfo_exists():
+            root.after(0, do_update)
+    except:
+        pass
+    print(text)
+
+def speak(text):
+    engine = pyttsx3.init()
+    engine.say(text)
+    engine.runAndWait()
+
+
+def log_attendance(name, time_str, status):
+    def do_log():
+        log_entry = f"{time_str} - {name} → {status}\n"
+        log_text.config(state="normal")
+        log_text.insert("end", log_entry)
+        log_text.see("end")
+        log_text.config(state="disabled")
+    root.after(0, do_log)
+
+# ==== Attendance Marking ====
+def mark_attendance(name):
+    today = datetime.now().strftime("%Y-%m-%d")
+    filename = os.path.join(SAVE_DIR, f"attendance_{today}.txt")
+
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as file:
+            if name in file.read():
+                return  # Already marked
+
+    now = datetime.now()
+    time_str = now.strftime("%H:%M:%S")
+    status = "Present ✅" if now.time() <= CUTOFF_TIME else "Late ❌"
+    entry = f"Name: {name}\nTime: {time_str}\nStatus: {status}\n-------------------------\n"
+
+    with open(filename, "a", encoding="utf-8") as file:
+        file.write(entry)
+
+    update_status(f"✅ Marked: {name}")
+    log_attendance(name, time_str, status)
+
+# ==== Speech ====
+def listen_for_keyword():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        update_status("🎧 Say 'activate' or 'stop'")
+        audio = r.listen(source, phrase_time_limit=4)
+        try:
+            text = r.recognize_google(audio).lower()
+            update_status(f"🗣️ You said: {text}")
+            return text
+        except:
+            update_status("❌ Voice not clear")
+            return ""
+
+# ==== Motion Detection ====
+def motion_detected(prev, current, threshold=10000):
+    diff = cv2.absdiff(prev, current)
+    gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (5, 5), 0)
+    _, thresh = cv2.threshold(blur, 25, 255, cv2.THRESH_BINARY)
+    return np.sum(thresh) > threshold
+
+# ==== Camera Logic ====
+def camera_loop():
+    global running
+    running = True
+    cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
+    recorded = set()
+    update_status("📷 Camera running...")
+
+    # ==== Video Recording Setup ====
+    record_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    video_path = os.path.join(RECORDINGS_DIR, f"rec_{record_time}.avi")
+    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    frame_width = int(cap.get(3))
+    frame_height = int(cap.get(4))
+    out = cv2.VideoWriter(video_path, fourcc, 20.0, (frame_width, frame_height))
+
+    ret, prev_frame = cap.read()
+    last_motion_time = time.time()
+
+    while running:
+        ret, frame = cap.read()
+        if not ret:
+            continue
+
+        out.write(frame)  # CCTV-style recording
+
+        if frame.dtype != np.uint8:
+            frame = (frame * 255).astype(np.uint8)
+        if frame.shape[2] == 4:
+            frame = frame[:, :, :3]
+
+        if motion_detected(prev_frame, frame):
+            last_motion_time = time.time()
+            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            faces = face_recognition.face_locations(rgb)
+            encodes = face_recognition.face_encodings(rgb, faces)
+
+            for encode, loc in zip(encodes, faces):
+                matches = face_recognition.compare_faces(known_encodings, encode)
+                dist = face_recognition.face_distance(known_encodings, encode)
+                if any(matches):
+                    best = np.argmin(dist)
+                    name = known_names[best]
+                    if name not in recorded:
+                        mark_attendance(name)
+                        recorded.add(name)
+                else:
+                    now = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                    filename = os.path.join(UNKNOWN_DIR, f"unknown_{now}.jpg")
+                    cv2.imwrite(filename, frame)
+                    print(f"🚨 Unknown face saved: {filename}")
+
+        prev_frame = frame.copy()
+
+        if time.time() - last_motion_time > 5:
+            command = listen_for_keyword()
+            if "stop" in command:
+                update_status("🛑 Stopped by voice command.")
+                break
+
+        if time.time() - last_motion_time > SLEEP_AFTER:
+            update_status("😴 No motion for 1 min. Sleeping...")
+            break
+
+    cap.release()
+    out.release()
+    cv2.destroyAllWindows()
+    running = False
+    update_status("🔁 Ready again. Click Start.")
+
+# ==== Button Action ====
+def start_attendance_thread():
+    thread = threading.Thread(target=run_attendance, daemon=True)
+    thread.start()
+
+def run_attendance():
+    while True:
+        update_status("🎧 Say 'activate' to begin or 'stop' to exit")
+        keyword = listen_for_keyword()
+
+        if "activate" in keyword:
+            camera_loop()
+        elif "stop" in keyword:
+            update_status("👋 Exiting attendance system...")
+            root.after(1000, root.quit)
+            break
+        else:
+            update_status("❌ Didn't catch that. Try again.")
+
+start_button = ttk.Button(root, text="▶️ Start Attendance", command=start_attendance_thread)
+start_button.pack(pady=10)
+
+root.mainloop()
