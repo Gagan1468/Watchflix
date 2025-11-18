@@ -1,7 +1,7 @@
 // app.js (Option C - Beast Mode)
 // Requires: your index.html and styles.css from earlier.
 // Uses TMDB API key (you provided). For prod, proxy these requests.
-const TMDB_API_KEY = '63c62d92d97c823fcf668b74693bf705 ';
+const TMDB_API_KEY = '63c62d92d97c823fcf668b74693bf705';
 
 const ROWS = [
   { id: 'trending', title: 'Trending Now', url: `https://api.themoviedb.org/3/trending/all/week?api_key=${TMDB_API_KEY}&language=en-US` },
